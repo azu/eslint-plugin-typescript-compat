@@ -4,33 +4,28 @@
  */
 "use strict";
 
-//------------------------------------------------------------------------------
-// Requirements
-//------------------------------------------------------------------------------
-
 var rule = require("../../../lib/rules/no-prepend"),
 
     RuleTester = require("eslint").RuleTester;
 
-
-//------------------------------------------------------------------------------
-// Tests
-//------------------------------------------------------------------------------
-
-var ruleTester = new RuleTester();
+    var ruleTester = new RuleTester();
 ruleTester.run("no-prepend", rule, {
 
     valid: [
-
-        // give me some code that won't trigger a warning
+        `var e = new Element();
+         e.appendChild();
+         `,
     ],
 
     invalid: [
         {
-            code: "prepend() is forbidden",
+            code: `
+              var e = new Element();
+              e.prepend();
+            `,
             errors: [{
-                message: "Fill me in.",
-                type: "Me too"
+                message: "IE11 does not have prepend()",
+                type: "CallExpression"
             }]
         }
     ]
