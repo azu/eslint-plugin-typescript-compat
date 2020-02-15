@@ -10,17 +10,20 @@ RuleTester = require("eslint").RuleTester;
 
 var ruleTester = new RuleTester({
     parserOptions: {
-        ecmaVersion: 6,
-        sourceType: 'module',
-        ecmaFeatures: {},
+        // ecmaVersion: 6,
+        // sourceType: 'module',
+        // ecmaFeatures: {},
         preserveNodeMaps: true,
+        tsconfigRootDir: './tests/fixture-project/',
+        // project: './tsconfig.json',
     },
-    parser: '@typescript-eslint/parser',
+    parser: require.resolve('@typescript-eslint/parser'),
 });
+
 ruleTester.run("no-prepend", rule, {
 
     valid: [
-        `var e = new Element();
+        `var e: Element = new Element();
          e.appendChild();
          `,
     ],
