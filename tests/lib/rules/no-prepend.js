@@ -6,9 +6,17 @@
 
 var rule = require("../../../lib/rules/no-prepend"),
 
-    RuleTester = require("eslint").RuleTester;
+RuleTester = require("eslint").RuleTester;
 
-    var ruleTester = new RuleTester();
+var ruleTester = new RuleTester({
+    parserOptions: {
+        ecmaVersion: 6,
+        sourceType: 'module',
+        ecmaFeatures: {},
+        preserveNodeMaps: true,
+    },
+    parser: '@typescript-eslint/parser',
+});
 ruleTester.run("no-prepend", rule, {
 
     valid: [
