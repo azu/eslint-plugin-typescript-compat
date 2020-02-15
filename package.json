@@ -10,7 +10,8 @@
   "author": "sketch",
   "main": "lib/index.js",
   "scripts": {
-    "test": "mocha tests --recursive"
+    "build": "tsc",
+    "test": "mocha -r ts-node/register tests/**/*.ts"
   },
   "dependencies": {
     "requireindex": "~1.1.0"
@@ -19,9 +20,14 @@
     "typescript": "^3.7.5"
   },
   "devDependencies": {
+    "@types/chai": "^4.2.9",
+    "@types/mocha": "^7.0.1",
+    "@types/node": "^13.7.1",
     "@typescript-eslint/parser": "^2.19.2",
+    "chai": "^4.2.0",
     "eslint": "~3.9.1",
-    "mocha": "^3.1.2",
+    "mocha": "^3.5.3",
+    "ts-node": "^8.6.2",
     "typescript": "^3.7.5"
   },
   "engines": {

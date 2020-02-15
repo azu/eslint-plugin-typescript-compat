@@ -19,9 +19,9 @@ module.exports = {
         fixable: null,
     },
 
-    create: function (context) {
+    create: function (context: any) {
         return {
-            'CallExpression': (node) => {
+            'CallExpression': (node: any) => {
                 // console.log(context.parserServices.esTreeNodeToTSNodeMap.get(node));
                 const checker = context.parserServices.program.getTypeChecker();
                 const tsNode = context.parserServices.esTreeNodeToTSNodeMap.get(node.callee.object);
@@ -29,7 +29,7 @@ module.exports = {
                 // console.log(type);
                 // console.log(checker.isTypeAssignableTo(type, checker.get));
                 // console.log(type.symbol.escapedName);
-                if (node.callee.property.name === 'prepend' && type && type.symbol && type.symbol.escapedName.match(/Element/)) { // XXX
+                if (node.callee.property.name === 'prepend' && type?.symbol?.escapedName.match(/Element/)) { // XXX
                     context.report({
                         node: node,
                         message: "IE11 does not have prepend()",
