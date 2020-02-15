@@ -15,8 +15,10 @@ var ruleTester = new RuleTester({
         // ecmaFeatures: {},
         preserveNodeMaps: true,
         tsconfigRootDir: './tests/fixture-project/',
-        // project: './tsconfig.json',
+        project: './tsconfig.json',
+        createDefaultProgram: true,
     },
+
     parser: require.resolve('@typescript-eslint/parser'),
 });
 
