@@ -22,6 +22,7 @@ var ruleTester = new RuleTester({
 ruleTester.run("no-prepend", rule, {
 
     valid: [
+        `const p = (e: Array) => { e.prepend() };`,
         `var e: Element = new Element();
          e.appendChild();
          `,
@@ -29,9 +30,15 @@ ruleTester.run("no-prepend", rule, {
 
     invalid: [
         {
+            code: `const p = (e: Element) => { e.prepend() };`,
+            errors: [{
+                message: "IE11 does not have prepend()",
+                type: "CallExpression"
+            }]
+        },
+        {
             code: `
-              var e = new Element();
-              e.prepend();
+              document.querySelector('div').prepend();
             `,
             errors: [{
                 message: "IE11 does not have prepend()",
