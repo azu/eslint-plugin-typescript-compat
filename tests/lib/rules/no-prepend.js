@@ -10,9 +10,6 @@ RuleTester = require("eslint").RuleTester;
 
 var ruleTester = new RuleTester({
     parserOptions: {
-        // ecmaVersion: 6,
-        // sourceType: 'module',
-        // ecmaFeatures: {},
         preserveNodeMaps: true,
         tsconfigRootDir: './tests/fixture-project/',
         project: './tsconfig.json',
