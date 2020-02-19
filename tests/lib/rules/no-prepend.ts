@@ -32,7 +32,7 @@ ruleTester.run("no-prepend", rule, {
         {
             code: `const p = (e: Element) => { e.prepend() };`,
             errors: [{
-                message: "IE11 does not have prepend()",
+                messageId: "no-prepend",
                 type: "CallExpression"
             }]
         },
@@ -41,7 +41,7 @@ ruleTester.run("no-prepend", rule, {
               document.querySelector('div').prepend();
             `,
             errors: [{
-                message: "IE11 does not have prepend()",
+                messageId: "no-prepend",
                 type: "CallExpression"
             }]
         }
