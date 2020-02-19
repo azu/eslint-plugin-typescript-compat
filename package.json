@@ -14,6 +14,7 @@
     "test": "mocha -r ts-node/register tests/**/*.ts"
   },
   "dependencies": {
+    "@typescript-eslint/experimental-utils": "^2.19.2",
     "requireindex": "~1.1.0"
   },
   "peerDependencies": {

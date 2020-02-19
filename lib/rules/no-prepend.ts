@@ -1,3 +1,4 @@
+import { ESLintUtils } from '@typescript-eslint/experimental-utils';
 /**
  * @fileoverview Disallow prepend()
  * @author no-prepend
@@ -8,34 +9,40 @@
 // Rule Definition
 //------------------------------------------------------------------------------
 
-module.exports = {
+export = ESLintUtils.RuleCreator(name => '')({
+    name: "no-prepend",
     meta: {
         docs: {
-            description: "Disallow prepend()",
-            category: "Compatibility",
-            recommended: false,
+            description: `Disable prepend()`,
+            category: "Possible Errors",
+            recommended: "error",
             requiresTypeChecking: true,
         },
-        fixable: null,
+        messages: {
+            noPrepend: "IE11 does not have prepend()"
+        },
+        schema: [],
+        type: "problem",
     },
+    defaultOptions: [],
 
-    create: function (context: any) {
+    create(context) {
         return {
             'CallExpression': (node: any) => {
                 // console.log(context.parserServices.esTreeNodeToTSNodeMap.get(node));
-                const checker = context.parserServices.program.getTypeChecker();
-                const tsNode = context.parserServices.esTreeNodeToTSNodeMap.get(node.callee.object);
-                const type = checker.getTypeAtLocation(tsNode);
+                const checker = context.parserServices?.program?.getTypeChecker();
+                const tsNode = context.parserServices?.esTreeNodeToTSNodeMap?.get(node.callee.object);
+                const type = tsNode && checker?.getTypeAtLocation(tsNode);
                 // console.log(type);
                 // console.log(checker.isTypeAssignableTo(type, checker.get));
                 // console.log(type.symbol.escapedName);
-                if (node.callee.property.name === 'prepend' && type?.symbol?.escapedName.match(/Element/)) { // XXX
+                if (node.callee.property.name === 'prepend' && type?.symbol?.escapedName.toString().match(/Element/)) { // XXX
                     context.report({
                         node: node,
-                        message: "IE11 does not have prepend()",
+                        messageId: "noPrepend",
                     });
                 }
             },
         };
-    }
-};
+    },
+});
