@@ -46,6 +46,7 @@ export = ESLintUtils.RuleCreator(name => '')({
 
                 // TODO: get implementing interfaces from symbol. eg: HTMLDivElement -> Element -> ParentNode
                 const compat = CompatData.api.ParentNode[name];
+                // TODO: receive browserlist
                 const supported = (compat?.__compat?.support.ie as any)?.version_added;
                 console.log(name, compat?.__compat?.support.ie);
                 if (supported) return;
