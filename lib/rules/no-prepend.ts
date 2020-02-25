@@ -3,7 +3,6 @@ import { ESLintUtils } from '@typescript-eslint/experimental-utils';
  * @fileoverview Disallow prepend()
  * @author no-prepend
  */
-"use strict";
 
 //------------------------------------------------------------------------------
 // Rule Definition
@@ -28,20 +27,25 @@ export = ESLintUtils.RuleCreator(name => '')({
 
     create(context) {
         return {
-            'CallExpression': (node: any) => {
-                // console.log(context.parserServices.esTreeNodeToTSNodeMap.get(node));
+            'MemberExpression': (node) => {
                 const checker = context.parserServices?.program?.getTypeChecker();
-                const tsNode = context.parserServices?.esTreeNodeToTSNodeMap?.get(node.callee.object);
-                const type = tsNode && checker?.getTypeAtLocation(tsNode);
-                // console.log(type);
-                // console.log(checker.isTypeAssignableTo(type, checker.get));
-                // console.log(type.symbol.escapedName);
-                if (node.callee.property.name === 'prepend' && type?.symbol?.escapedName.toString().match(/Element/)) { // XXX
-                    context.report({
-                        node: node,
-                        messageId: "noPrepend",
-                    });
-                }
+                if (!checker) return;
+                const tsNode = context.parserServices?.esTreeNodeToTSNodeMap?.get(node.property);
+                if (!tsNode) return;
+                const type = checker.getTypeAtLocation(tsNode);
+                const symbol = type.symbol;
+                // find is better?
+                const isLibDomMethod = symbol?.getDeclarations()?.every(dec => dec.getSourceFile().fileName.match(/lib\.dom\.d\.ts/));
+
+                const name = symbol?.getName();
+
+                // TODO: collect forbidden methods from mdn-browser-compat-data
+                if (name === 'prepend' && isLibDomMethod) {
+                     context.report({
+                         node: node,
+                         messageId: "noPrepend",
+                     });
+                 }
             },
         };
     },

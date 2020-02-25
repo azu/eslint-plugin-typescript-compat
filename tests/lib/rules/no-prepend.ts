@@ -22,10 +22,10 @@ var ruleTester = new RuleTester({
 ruleTester.run("no-prepend", rule, {
 
     valid: [
-        `const p = (e: Array) => { e.prepend() };`,
-        `var e: Element = new Element();
-         e.appendChild();
-         `,
+        `e.prepend();`,
+        `e.appendChild();`,
+         `class A { prepend() {} }; new A().prepend();`,
+         `namespace Foo { class Element { }; new Element().prepend(); }`,
     ],
 
     invalid: [
@@ -33,16 +33,21 @@ ruleTester.run("no-prepend", rule, {
             code: `const p = (e: Element) => { e.prepend() };`,
             errors: [{
                 messageId: "no-prepend",
-                type: "CallExpression"
+                type: "MemberExpression"
             }]
         },
         {
-            code: `
-              document.querySelector('div').prepend();
-            `,
+            code: `const p = (e: Element) => { e.prepend };`,
             errors: [{
                 messageId: "no-prepend",
-                type: "CallExpression"
+                type: "MemberExpression"
+            }]
+        },
+        {
+            code: `document.querySelector('div').prepend();`,
+            errors: [{
+                messageId: "no-prepend",
+                type: "MemberExpression"
             }]
         }
     ]
