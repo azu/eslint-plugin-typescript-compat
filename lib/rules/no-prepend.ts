@@ -1,8 +1,11 @@
 import { ESLintUtils } from '@typescript-eslint/experimental-utils';
+import CompatData from 'mdn-browser-compat-data';
 /**
  * @fileoverview Disallow prepend()
  * @author no-prepend
  */
+
+ console.log(CompatData.api.ParentNode);
 
 //------------------------------------------------------------------------------
 // Rule Definition
@@ -18,7 +21,7 @@ export = ESLintUtils.RuleCreator(name => '')({
             requiresTypeChecking: true,
         },
         messages: {
-            noPrepend: "IE11 does not have prepend()"
+            notSupported: "Not Supported"
         },
         schema: [],
         type: "problem",
@@ -39,13 +42,18 @@ export = ESLintUtils.RuleCreator(name => '')({
 
                 const name = symbol?.getName();
 
-                // TODO: collect forbidden methods from mdn-browser-compat-data
-                if (name === 'prepend' && isLibDomMethod) {
-                     context.report({
-                         node: node,
-                         messageId: "noPrepend",
-                     });
-                 }
+                if (!isLibDomMethod) return;
+
+                // TODO: get implementing interfaces from symbol. eg: HTMLDivElement -> Element -> ParentNode
+                const compat = CompatData.api.ParentNode[name];
+                const supported = (compat?.__compat?.support.ie as any)?.version_added;
+                console.log(name, compat?.__compat?.support.ie);
+                if (supported) return;
+
+                 context.report({
+                     node: node,
+                     messageId: "notSupported",
+                 });
             },
         };
     },
