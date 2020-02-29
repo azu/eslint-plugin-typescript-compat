@@ -14,7 +14,9 @@
     "test": "mocha -r ts-node/register tests/**/*.ts"
   },
   "dependencies": {
+    "@types/browserslist": "^4.8.0",
     "@typescript-eslint/experimental-utils": "^2.19.2",
+    "browserslist": "^4.9.1",
     "requireindex": "~1.1.0"
   },
   "peerDependencies": {
