@@ -40,8 +40,8 @@ function toMdnName(name: string): string {
     return mapping[name] || name;
 }
 
-function isSupported(support: SupportBlock, targetBrowsersList: string[]): Boolean {
-    if (!support) return false;
+function isSupported(support: SupportBlock, targetBrowsersList: string[]): [Boolean, string?] {
+    //if (!support) return [false, undefined];
     for (const browserAndVersion of targetBrowsersList) {
         const browser = toMdnName(browserAndVersion.split(' ')[0]);
         // extract 13.0 from 'ios_saf 13.0-13.1'
@@ -51,15 +51,15 @@ function isSupported(support: SupportBlock, targetBrowsersList: string[]): Boole
             // skip kaios, op_mini, baidu, and_qq, and_uc
             continue;
         }
-       if (!browserSupport) return false;
+       if (!browserSupport) return [false, browserAndVersion];
        const browsers = Array.isArray(browserSupport) ? browserSupport : [ browserSupport ];
        for (const b of browsers) {
            const added = b.version_added;
-           if (added === false) return false;
-           if (Number(added) > version) return false;
+           if (added === false) return [false, browserAndVersion];
+           if (Number(added) > version) return [false, browserAndVersion];
        }
     }
-    return true;
+    return [true, undefined];
 }
 
 export = ESLintUtils.RuleCreator(name => '')({
@@ -72,7 +72,7 @@ export = ESLintUtils.RuleCreator(name => '')({
             requiresTypeChecking: true,
         },
         messages: {
-            notSupported: "Not Supported"
+            'no-prepend': "{{ method }} is not supported in {{ browser }}"
         },
         schema: [
             {
@@ -127,12 +127,16 @@ export = ESLintUtils.RuleCreator(name => '')({
                     if (!compat) continue;
                     const support = compat?.__compat?.support;
                     if (!support) continue;
-                    if (isSupported(support, targetBrowsersList)) continue;
+                    const supportedAndBrokenBrowser = isSupported(support, targetBrowsersList);
+                    if (supportedAndBrokenBrowser[0]) continue;
 
-                    // TODO: set label
                     context.report({
                         node: node,
-                        messageId: "notSupported",
+                        messageId: "no-prepend",
+                        data: {
+                            method: name,
+                            browser: supportedAndBrokenBrowser[1],
+                        }
                     });
                     return;
                 }
