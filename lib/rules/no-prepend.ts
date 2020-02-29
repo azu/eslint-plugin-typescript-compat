@@ -1,12 +1,12 @@
 import { ESLintUtils } from '@typescript-eslint/experimental-utils';
 import CompatData from 'mdn-browser-compat-data';
+import { SupportBlock } from 'mdn-browser-compat-data/types';
 import browserslist from 'browserslist';
 import ts from 'typescript';
 /**
  * @fileoverview Disallow prepend()
  * @author no-prepend
  */
-
 //------------------------------------------------------------------------------
 // Rule Definition
 //------------------------------------------------------------------------------
@@ -28,6 +28,40 @@ function isLibDomSymbol(symbol: ts.Symbol): Boolean {
     return decs.every(dec => dec.getSourceFile().fileName.match(/lib\.dom\.d\.ts/));
 }
 
+function toMdnName(name: string): string {
+    const mapping: { [key: string]: string } = {
+        and_chr: 'chrome_android',
+        and_ff: 'firefox_android',
+        samsung: 'samsunginternet_android',
+        op_mob: 'opera_android',
+        ios_saf: 'safari_ios',
+        android: 'chrome_android',
+    };
+    return mapping[name] || name;
+}
+
+function isSupported(support: SupportBlock, targetBrowsersList: string[]): Boolean {
+    if (!support) return false;
+    for (const browserAndVersion of targetBrowsersList) {
+        const browser = toMdnName(browserAndVersion.split(' ')[0]);
+        // extract 13.0 from 'ios_saf 13.0-13.1'
+        const version = Number(browserAndVersion.split(/[ -]/)[1]) || 0;
+        const browserSupport = support[browser];
+        if (!browserSupport) {
+            // skip kaios, op_mini, baidu, and_qq, and_uc
+            continue;
+        }
+       if (!browserSupport) return false;
+       const browsers = Array.isArray(browserSupport) ? browserSupport : [ browserSupport ];
+       for (const b of browsers) {
+           const added = b.version_added;
+           if (added === false) return false;
+           if (Number(added) > version) return false;
+       }
+    }
+    return true;
+}
+
 export = ESLintUtils.RuleCreator(name => '')({
     name: "no-prepend",
     meta: {
@@ -43,7 +77,7 @@ export = ESLintUtils.RuleCreator(name => '')({
         schema: [
             {
                 type: 'object',
-                additionalProperties: false,
+                // additionalProperties: false,
                 properties: {
                     browserslist: {
                         anyOf: [
@@ -68,7 +102,7 @@ export = ESLintUtils.RuleCreator(name => '')({
     ],
     create(context, [options]) {
         const browserslistConfig = options.browserslist || 'defaults';
-        console.log(browserslist(browserslistConfig, { path: context.getFilename() }));
+        const targetBrowsersList = browserslist(browserslistConfig, { path: context.getFilename() });
         return {
             'MemberExpression': (node) => {
                 const checker = context.parserServices?.program?.getTypeChecker();
@@ -91,9 +125,9 @@ export = ESLintUtils.RuleCreator(name => '')({
                     if (!compats) continue;
                     const compat = compats[name];
                     if (!compat) continue;
-                    // TODO: receive browserlist
-                    const supported = (compat?.__compat?.support.ie as any)?.version_added;
-                    if (supported) return;
+                    const support = compat?.__compat?.support;
+                    if (!support) continue;
+                    if (isSupported(support, targetBrowsersList)) continue;
 
                     // TODO: set label
                     context.report({

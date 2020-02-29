@@ -48,7 +48,15 @@ ruleTester.run("no-prepend", rule, {
             errors: [{
                 messageId: "no-prepend",
                 type: "MemberExpression"
-            }]
-        }
+            }],
+        },
+        {
+            code: `document.querySelector('div');`,
+            errors: [{
+                messageId: "no-prepend",
+                type: "MemberExpression"
+            }],
+            options: [ { browserslist: ['ie 6']} ],
+        },
     ]
 });
