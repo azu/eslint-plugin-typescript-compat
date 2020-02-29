@@ -1,15 +1,31 @@
 import { ESLintUtils } from '@typescript-eslint/experimental-utils';
 import CompatData from 'mdn-browser-compat-data';
+import ts from 'typescript';
 /**
  * @fileoverview Disallow prepend()
  * @author no-prepend
  */
 
- console.log(CompatData.api.ParentNode);
-
 //------------------------------------------------------------------------------
 // Rule Definition
 //------------------------------------------------------------------------------
+
+function collectBaseSymbols(t: ts.BaseType): ts.Symbol[] {
+    const symbols: ts.Symbol[] = [];
+    symbols.push(t.symbol);
+    const baseTypes = t.getBaseTypes();
+    if (baseTypes) for (const base of baseTypes) {
+        symbols.push(...collectBaseSymbols(base));
+    }
+    return symbols;
+}
+
+function isLibDomSymbol(symbol: ts.Symbol): Boolean {
+    if (!symbol) return false;
+    const decs = symbol.declarations;
+    // TODO: better detection
+    return decs.every(dec => dec.getSourceFile().fileName.match(/lib\.dom\.d\.ts/));
+}
 
 export = ESLintUtils.RuleCreator(name => '')({
     name: "no-prepend",
@@ -33,28 +49,35 @@ export = ESLintUtils.RuleCreator(name => '')({
             'MemberExpression': (node) => {
                 const checker = context.parserServices?.program?.getTypeChecker();
                 if (!checker) return;
-                const tsNode = context.parserServices?.esTreeNodeToTSNodeMap?.get(node.property);
-                if (!tsNode) return;
-                const type = checker.getTypeAtLocation(tsNode);
-                const symbol = type.symbol;
-                // find is better?
-                const isLibDomMethod = symbol?.getDeclarations()?.every(dec => dec.getSourceFile().fileName.match(/lib\.dom\.d\.ts/));
+                const tsObject = context.parserServices?.esTreeNodeToTSNodeMap?.get(node.object);
+                if (!tsObject) return;
+                const objectType = checker.getTypeAtLocation(tsObject);
 
-                const name = symbol?.getName();
+                const tsProperty = context.parserServices?.esTreeNodeToTSNodeMap?.get(node.property);
+                if (!tsProperty) return;
+                const propertyType = checker.getTypeAtLocation(tsProperty);
+                const propertySymbol = propertyType.symbol;
+                if (!isLibDomSymbol(propertySymbol)) return;
 
-                if (!isLibDomMethod) return;
+                const name = propertySymbol.getName();
 
-                // TODO: get implementing interfaces from symbol. eg: HTMLDivElement -> Element -> ParentNode
-                const compat = CompatData.api.ParentNode[name];
-                // TODO: receive browserlist
-                const supported = (compat?.__compat?.support.ie as any)?.version_added;
-                console.log(name, compat?.__compat?.support.ie);
-                if (supported) return;
+                for (const objectSymbol of collectBaseSymbols(objectType).filter(isLibDomSymbol)) {
+                    const className = objectSymbol.getEscapedName().toString();
+                    const compats = CompatData.api[className];
+                    if (!compats) continue;
+                    const compat = compats[name];
+                    if (!compat) continue;
+                    // TODO: receive browserlist
+                    const supported = (compat?.__compat?.support.ie as any)?.version_added;
+                    if (supported) return;
 
-                 context.report({
-                     node: node,
-                     messageId: "notSupported",
-                 });
+                    // TODO: set label
+                    context.report({
+                        node: node,
+                        messageId: "notSupported",
+                    });
+                    return;
+                }
             },
         };
     },
