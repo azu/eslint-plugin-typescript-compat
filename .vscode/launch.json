@@ -10,8 +10,9 @@
             "name": "Mocha Tests",
             "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
             "args": [
-                "tests",
-                "--recursive"
+                "-r",
+                "ts-node/register",
+                "tests/**/*.ts",
             ],
             "internalConsoleOptions": "openOnSessionStart",
             "skipFiles": [
