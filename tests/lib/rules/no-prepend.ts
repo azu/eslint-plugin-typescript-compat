@@ -32,23 +32,34 @@ ruleTester.run("no-prepend", rule, {
         {
             code: `const p = (e: Element) => { e.prepend() };`,
             errors: [{
-                messageId: "no-prepend",
+                message: "prepend is not supported in ie 11",
                 type: "MemberExpression"
-            }]
+            }],
+            options: [ { browserslist: ['ie 11']} ],
         },
         {
             code: `const p = (e: Element) => { e.prepend };`,
             errors: [{
-                messageId: "no-prepend",
+                message: "prepend is not supported in ie 11",
                 type: "MemberExpression"
-            }]
+            }],
+            options: [ { browserslist: ['ie 11']} ],
         },
         {
             code: `document.querySelector('div').prepend();`,
             errors: [{
-                messageId: "no-prepend",
+                message: "prepend is not supported in ie 11",
                 type: "MemberExpression"
-            }]
-        }
+            }],
+            options: [ { browserslist: ['ie 11']} ],
+        },
+        {
+            code: `document.querySelector('div');`,
+            errors: [{
+                message: "querySelector is not supported in ie 6",
+                type: "MemberExpression"
+            }],
+            options: [ { browserslist: ['ie 6']} ],
+        },
     ]
 });
