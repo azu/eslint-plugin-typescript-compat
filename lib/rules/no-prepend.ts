@@ -1,5 +1,6 @@
 import { ESLintUtils } from '@typescript-eslint/experimental-utils';
 import CompatData from 'mdn-browser-compat-data';
+import browserslist from 'browserslist';
 import ts from 'typescript';
 /**
  * @fileoverview Disallow prepend()
@@ -39,12 +40,35 @@ export = ESLintUtils.RuleCreator(name => '')({
         messages: {
             notSupported: "Not Supported"
         },
-        schema: [],
+        schema: [
+            {
+                type: 'object',
+                additionalProperties: false,
+                properties: {
+                    browserslist: {
+                        anyOf: [
+                            {
+                                type: 'array',
+                                items: {
+                                    type: 'string',
+                                },
+                            },
+                            { type: 'string' }
+                        ]
+                    },
+                },
+            },
+        ],
         type: "problem",
     },
-    defaultOptions: [],
-
-    create(context) {
+    defaultOptions: [
+        {
+            browserslist: "defaults",
+        },
+    ],
+    create(context, [options]) {
+        const browserslistConfig = options.browserslist || 'defaults';
+        console.log(browserslist(browserslistConfig, { path: context.getFilename() }));
         return {
             'MemberExpression': (node) => {
                 const checker = context.parserServices?.program?.getTypeChecker();
