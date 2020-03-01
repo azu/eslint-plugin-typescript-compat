@@ -18,7 +18,8 @@
     "@types/browserslist": "^4.8.0",
     "@typescript-eslint/experimental-utils": "^2.21.0",
     "browserslist": "^4.9.1",
-    "requireindex": "~1.1.0"
+    "requireindex": "~1.1.0",
+    "mdn-browser-compat-data": "^1.0.10"
   },
   "peerDependencies": {
     "typescript": "^3.7.5"
@@ -30,7 +31,6 @@
     "@typescript-eslint/parser": "^2.21.0",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
-    "mdn-browser-compat-data": "^1.0.10",
     "mocha": "^3.5.3",
     "ts-node": "^8.6.2",
     "typescript": "^3.8.3"
