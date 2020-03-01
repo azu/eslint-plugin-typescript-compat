@@ -61,5 +61,13 @@ ruleTester.run("no-prepend", rule, {
             }],
             options: [ { browserslist: ['ie 6']} ],
         },
+        {
+            code: `new ServiceWorker()`,
+            errors: [{
+                message: "ServiceWorker is not supported in ie 6",
+                type: "Identifier"
+            }],
+            options: [ { browserslist: ['ie 6']} ],
+        },
     ]
 });

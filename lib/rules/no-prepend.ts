@@ -141,6 +141,34 @@ export = ESLintUtils.RuleCreator(name => '')({
                     return;
                 }
             },
+            'Identifier': (node) => {
+                console.log(node.name);
+                const checker = context.parserServices?.program?.getTypeChecker();
+                if (!checker) return;
+                const tsObject = context.parserServices?.esTreeNodeToTSNodeMap?.get(node);
+                if (!tsObject) return;
+                const objectSymbol = checker.getSymbolAtLocation(tsObject);
+                if (!objectSymbol) return;
+
+                if (!isLibDomSymbol(objectSymbol)) return;
+                const name = objectSymbol.getEscapedName().toString();
+                const compat = CompatData.api[name];
+                if (!compat) return;
+                const support = compat?.__compat?.support;
+                if (!support) return;
+                const supportedAndBrokenBrowser = isSupported(support, targetBrowsersList);
+                if (supportedAndBrokenBrowser[0]) return;
+
+                context.report({
+                    node: node,
+                    messageId: "no-prepend",
+                    data: {
+                        method: name,
+                        browser: supportedAndBrokenBrowser[1],
+                    }
+                });
+                return;
+            }
         };
     },
 });
