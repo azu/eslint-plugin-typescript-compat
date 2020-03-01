@@ -76,7 +76,7 @@ export = ESLintUtils.RuleCreator(name => '')({
         schema: [
             {
                 type: 'object',
-                // additionalProperties: false,
+                additionalProperties: false,
                 properties: {
                     browserslist: {
                         anyOf: [
