@@ -34,7 +34,7 @@ ruleTester.run("compat-dom", rule, {
         {
             code: `const p = (e: Element) => { e.prepend() };`,
             errors: [{
-                message: "prepend is not supported in ie 11",
+                message: "prepend is not supported in ie 11. https://developer.mozilla.org/docs/Web/API/ParentNode/prepend",
                 type: "MemberExpression"
             }],
             options: [ { browserslist: ['ie 11']} ],
@@ -42,7 +42,7 @@ ruleTester.run("compat-dom", rule, {
         {
             code: `const p = (e: Element) => { e.prepend };`,
             errors: [{
-                message: "prepend is not supported in ie 11",
+                message: "prepend is not supported in ie 11. https://developer.mozilla.org/docs/Web/API/ParentNode/prepend",
                 type: "MemberExpression"
             }],
             options: [ { browserslist: ['ie 11']} ],
@@ -50,7 +50,7 @@ ruleTester.run("compat-dom", rule, {
         {
             code: `document.querySelector('div').prepend();`,
             errors: [{
-                message: "prepend is not supported in ie 11",
+                message: "prepend is not supported in ie 11. https://developer.mozilla.org/docs/Web/API/ParentNode/prepend",
                 type: "MemberExpression"
             }],
             options: [ { browserslist: ['ie 11']} ],
@@ -58,7 +58,7 @@ ruleTester.run("compat-dom", rule, {
         {
             code: `document.querySelector('div');`,
             errors: [{
-                message: "querySelector is not supported in ie 6",
+                message: "querySelector is not supported in ie 6. https://developer.mozilla.org/docs/Web/API/Document/querySelector",
                 type: "MemberExpression"
             }],
             options: [ { browserslist: ['ie 6']} ],
@@ -66,7 +66,7 @@ ruleTester.run("compat-dom", rule, {
         {
             code: `new ServiceWorker()`,
             errors: [{
-                message: "ServiceWorker is not supported in ie 6",
+                message: "ServiceWorker is not supported in ie 6. https://developer.mozilla.org/docs/Web/API/ServiceWorker",
                 type: "Identifier"
             }],
             options: [ { browserslist: ['ie 6']} ],
@@ -74,7 +74,7 @@ ruleTester.run("compat-dom", rule, {
         {
             code: `navigator.vibrate()`,
             errors: [{
-                message: "vibrate is not supported in android 4.4",
+                message: "vibrate is not supported in android 4.4. https://developer.mozilla.org/docs/Web/API/Navigator/vibrate",
                 type: "MemberExpression"
             }],
             options: [ { browserslist: ['android 4.4']} ],

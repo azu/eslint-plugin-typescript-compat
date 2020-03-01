@@ -71,7 +71,7 @@ export = ESLintUtils.RuleCreator(name => '')({
             requiresTypeChecking: true,
         },
         messages: {
-            'compat-dom': "{{ method }} is not supported in {{ browser }}"
+            'compat-dom': "{{ method }} is not supported in {{ browser }}. {{ url }}"
         },
         schema: [
             {
@@ -135,6 +135,7 @@ export = ESLintUtils.RuleCreator(name => '')({
                         data: {
                             method: name,
                             browser: supportedAndBrokenBrowser[1],
+                            url: compat?.__compat?.mdn_url,
                         }
                     });
                     return;
@@ -163,6 +164,7 @@ export = ESLintUtils.RuleCreator(name => '')({
                     data: {
                         method: name,
                         browser: supportedAndBrokenBrowser[1],
+                        url: compat?.__compat?.mdn_url,
                     }
                 });
                 return;
