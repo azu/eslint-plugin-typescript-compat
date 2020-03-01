@@ -51,13 +51,13 @@ function isSupported(support: SupportBlock, targetBrowsersList: string[]): [Bool
             // skip kaios, op_mini, baidu, and_qq, and_uc
             continue;
         }
-       if (!browserSupport) return [false, browserAndVersion];
-       const browsers = Array.isArray(browserSupport) ? browserSupport : [ browserSupport ];
-       for (const b of browsers) {
-           const added = b.version_added;
-           if (added === false) return [false, browserAndVersion];
-           if (Number(added) > version) return [false, browserAndVersion];
-       }
+        if (!browserSupport) return [false, browserAndVersion];
+        const browsers = Array.isArray(browserSupport) ? browserSupport : [browserSupport];
+        for (const b of browsers) {
+            const added = b.version_added;
+            if (added === false) return [false, browserAndVersion];
+            if (Number(added) > version) return [false, browserAndVersion];
+        }
     }
     return [true, undefined];
 }
