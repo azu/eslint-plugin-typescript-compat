@@ -17,6 +17,7 @@ function collectBaseSymbols(t: ts.BaseType): ts.Symbol[] {
 function isLibDomSymbol(symbol: ts.Symbol): Boolean {
     if (!symbol) return false;
     const decs = symbol.declarations;
+    if(!decs) return false;
     // TODO: better detection
     return decs.every(dec => dec.getSourceFile().fileName.match(/lib\.dom\.d\.ts/));
 }

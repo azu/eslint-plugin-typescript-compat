@@ -28,9 +28,9 @@ Set plugins and rules.
   "plugins": ["typescript-compat-dom"],
 
   "rules": {
-    "typescript-compat-dom": {
+    "typescript-compat-dom/compat-dom": ["error", {
         "browserslist": ["ie 11"]
-    }
+    }]
   }
 }
 ```
