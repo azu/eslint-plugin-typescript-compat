@@ -5,6 +5,8 @@
 - inspired by [eslint\-plugin\-compat](https://www.npmjs.com/package/eslint-plugin-compat).
 - This plugin is under development.
 
+<img width="1385" alt="screenshot" src="https://user-images.githubusercontent.com/18360/75621805-a78a1a80-5bdc-11ea-930c-8087fa7a9479.png">
+
 ## Installation
 
 ```
