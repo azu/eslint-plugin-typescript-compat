@@ -51,13 +51,13 @@ function isSupported(support: SupportBlock, targetBrowsersList: string[]): [Bool
             // skip kaios, op_mini, baidu, and_qq, and_uc
             continue;
         }
-       if (!browserSupport) return [false, browserAndVersion];
-       const browsers = Array.isArray(browserSupport) ? browserSupport : [ browserSupport ];
-       for (const b of browsers) {
-           const added = b.version_added;
-           if (added === false) return [false, browserAndVersion];
-           if (Number(added) > version) return [false, browserAndVersion];
-       }
+        if (!browserSupport) return [false, browserAndVersion];
+        const browsers = Array.isArray(browserSupport) ? browserSupport : [browserSupport];
+        for (const b of browsers) {
+            const added = b.version_added;
+            if (added === false) return [false, browserAndVersion];
+            if (Number(added) > version) return [false, browserAndVersion];
+        }
     }
     return [true, undefined];
 }
@@ -141,6 +141,33 @@ export = ESLintUtils.RuleCreator(name => '')({
                     return;
                 }
             },
+            'Identifier': (node) => {
+                const checker = context.parserServices?.program?.getTypeChecker();
+                if (!checker) return;
+                const tsObject = context.parserServices?.esTreeNodeToTSNodeMap?.get(node);
+                if (!tsObject) return;
+                const objectSymbol = checker.getSymbolAtLocation(tsObject);
+                if (!objectSymbol) return;
+
+                if (!isLibDomSymbol(objectSymbol)) return;
+                const name = objectSymbol.getEscapedName().toString();
+                const compat = CompatData.api[name];
+                if (!compat) return;
+                const support = compat?.__compat?.support;
+                if (!support) return;
+                const supportedAndBrokenBrowser = isSupported(support, targetBrowsersList);
+                if (supportedAndBrokenBrowser[0]) return;
+
+                context.report({
+                    node: node,
+                    messageId: "no-prepend",
+                    data: {
+                        method: name,
+                        browser: supportedAndBrokenBrowser[1],
+                    }
+                });
+                return;
+            }
         };
     },
 });
