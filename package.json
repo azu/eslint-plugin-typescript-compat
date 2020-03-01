@@ -11,7 +11,8 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
-    "test": "mocha -r ts-node/register tests/**/*.ts"
+    "test": "mocha -r ts-node/register tests/**/*.ts",
+    "prepack": "npm run build"
   },
   "dependencies": {
     "@types/browserslist": "^4.8.0",
