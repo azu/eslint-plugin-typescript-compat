@@ -53,7 +53,6 @@ function isSupported(support: SupportBlock, targetBrowsersList: string[]): [Bool
             const semAdded = semver.minVersion(added);
             const semV = semver.minVersion(version);
             if (semAdded && semV) {
-                // console.log(semAdded, semV, semver.gt(semAdded, semV));
                 if (semver.gt(semAdded, semV)) return [false, browserAndVersion];
             }
         }
