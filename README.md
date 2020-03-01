@@ -29,7 +29,7 @@ Set plugins and rules.
 
   "rules": {
     "typescript-compat-dom": {
-        browserslist: ["ie 11"]
+        "browserslist": ["ie 11"]
     }
   }
 }
