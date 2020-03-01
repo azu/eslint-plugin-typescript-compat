@@ -1,4 +1,4 @@
-# eslint-plugin-sketch
+# eslint-plugin-typescript-compat-dom
 
 sketch rule
 
@@ -10,13 +10,13 @@ You'll first need to install [ESLint](http://eslint.org):
 $ npm i eslint --save-dev
 ```
 
-Next, install `eslint-plugin-sketch`:
+Next, install `eslint-plugin-typescript-compat-dom`:
 
 ```
-$ npm install eslint-plugin-sketch --save-dev
+$ npm install eslint-plugin-typescript-compat-dom --save-dev
 ```
 
-**Note:** If you installed ESLint globally (using the `-g` flag) then you must also install `eslint-plugin-sketch` globally.
+**Note:** If you installed ESLint globally (using the `-g` flag) then you must also install `eslint-plugin-typescript-compat-dom` globally.
 
 ## Usage
 
