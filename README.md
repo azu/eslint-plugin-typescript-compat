@@ -1,51 +1,38 @@
 # eslint-plugin-typescript-compat-dom
 
-sketch rule
+- Lints the compatibilities between browsers DOM APIs.
+- refers [mdn\-browser\-compat\-data](https://www.npmjs.com/package/mdn-browser-compat-data) and TypeScript Compiler API.
+- inspired by [eslint\-plugin\-compat](https://www.npmjs.com/package/eslint-plugin-compat).
+- This plugin is under development.
 
 ## Installation
 
-You'll first need to install [ESLint](http://eslint.org):
-
 ```
-$ npm i eslint --save-dev
+$ npm i eslint eslint typescript @typescript-eslint/parser --save-dev
 ```
-
-Next, install `eslint-plugin-typescript-compat-dom`:
-
-```
-$ npm install eslint-plugin-typescript-compat-dom --save-dev
-```
-
-**Note:** If you installed ESLint globally (using the `-g` flag) then you must also install `eslint-plugin-typescript-compat-dom` globally.
 
 ## Usage
 
-Add `sketch` to the plugins section of your `.eslintrc` configuration file. You can omit the `eslint-plugin-` prefix:
+Specify the parser in you .eslintrc.
 
 ```json
 {
-    "plugins": [
-        "sketch"
-    ]
+  "parser": "@typescript-eslint/parser"
 }
 ```
 
-
-Then configure the rules you want to use under the rules section.
+Set plugins and rules.
 
 ```json
 {
-    "rules": {
-        "sketch/rule-name": 2
+  "plugins": ["typescript-compat-dom"],
+
+  "rules": {
+    "typescript-compat-dom": {
+        browserslist: ["ie 11"]
     }
+  }
 }
 ```
-
-## Supported Rules
-
-* Fill in provided rules here
-
-
-
 
 
