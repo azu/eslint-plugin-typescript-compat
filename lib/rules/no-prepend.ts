@@ -142,7 +142,6 @@ export = ESLintUtils.RuleCreator(name => '')({
                 }
             },
             'Identifier': (node) => {
-                console.log(node.name);
                 const checker = context.parserServices?.program?.getTypeChecker();
                 if (!checker) return;
                 const tsObject = context.parserServices?.esTreeNodeToTSNodeMap?.get(node);
