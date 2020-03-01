@@ -37,7 +37,8 @@ function toMdnName(name: string): string {
 function isSupported(support: SupportBlock, targetBrowsersList: string[]): [Boolean, string?] {
     for (const browserAndVersion of targetBrowsersList) {
         const browser = toMdnName(browserAndVersion.split(' ')[0]);
-        const version = browserAndVersion.split(' ')[1] || '0';
+        // 4.3.3-4.3.4 to 4.3.3
+        const version = browserAndVersion.split(/[ -]/)[1] || '0';
         const browserSupport = support[browser];
         if (!browserSupport) {
             // skip kaios, op_mini, baidu, and_qq, and_uc

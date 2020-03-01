@@ -20,6 +20,10 @@ ruleTester.run("compat-dom", rule, {
         `e.appendChild();`,
          `class A { prepend() {} }; new A().prepend();`,
          `namespace Foo { class Element { }; new Element().prepend(); }`,
+         {
+            code: `navigator.vibrate()`,
+            options: [ { browserslist: ['android 4.4.3']} ],
+        },
     ],
 
     invalid: [
@@ -64,13 +68,12 @@ ruleTester.run("compat-dom", rule, {
             options: [ { browserslist: ['ie 6']} ],
         },
         {
-            //XXX: This should be valid.
             code: `navigator.vibrate()`,
             errors: [{
-                message: "vibrate is not supported in android 4.4.3-4.4.4",
+                message: "vibrate is not supported in android 4.4",
                 type: "MemberExpression"
             }],
-            options: [ { browserslist: ['android 4.4.3']} ],
+            options: [ { browserslist: ['android 4.4']} ],
         },
     ]
 });
