@@ -1,10 +1,4 @@
-/**
- * @fileoverview Disallow prepend()
- * @author no-prepend
- */
-"use strict";
-
-var rule = require("../../../lib/rules/no-prepend"),
+var rule = require("../../../lib/rules/compat-dom"),
 
 RuleTester = require("eslint").RuleTester;
 
@@ -19,7 +13,7 @@ var ruleTester = new RuleTester({
     parser: require.resolve('@typescript-eslint/parser'),
 });
 
-ruleTester.run("no-prepend", rule, {
+ruleTester.run("compat-dom", rule, {
 
     valid: [
         `e.prepend();`,

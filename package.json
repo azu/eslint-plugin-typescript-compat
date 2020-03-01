@@ -1,5 +1,5 @@
 {
-  "name": "eslint-plugin-sketch",
+  "name": "eslint-plugin-typescript-compat-dom",
   "version": "0.0.0",
   "description": "sketch rule",
   "keywords": [

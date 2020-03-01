@@ -3,13 +3,6 @@ import CompatData from 'mdn-browser-compat-data';
 import { SupportBlock } from 'mdn-browser-compat-data/types';
 import browserslist from 'browserslist';
 import ts from 'typescript';
-/**
- * @fileoverview Disallow prepend()
- * @author no-prepend
- */
-//------------------------------------------------------------------------------
-// Rule Definition
-//------------------------------------------------------------------------------
 
 function collectBaseSymbols(t: ts.BaseType): ts.Symbol[] {
     const symbols: ts.Symbol[] = [];
@@ -63,7 +56,7 @@ function isSupported(support: SupportBlock, targetBrowsersList: string[]): [Bool
 }
 
 export = ESLintUtils.RuleCreator(name => '')({
-    name: "no-prepend",
+    name: "compat-dom",
     meta: {
         docs: {
             description: `Disable prepend()`,
@@ -72,7 +65,7 @@ export = ESLintUtils.RuleCreator(name => '')({
             requiresTypeChecking: true,
         },
         messages: {
-            'no-prepend': "{{ method }} is not supported in {{ browser }}"
+            'compat-dom': "{{ method }} is not supported in {{ browser }}"
         },
         schema: [
             {
@@ -132,7 +125,7 @@ export = ESLintUtils.RuleCreator(name => '')({
 
                     context.report({
                         node: node,
-                        messageId: "no-prepend",
+                        messageId: "compat-dom",
                         data: {
                             method: name,
                             browser: supportedAndBrokenBrowser[1],
@@ -160,7 +153,7 @@ export = ESLintUtils.RuleCreator(name => '')({
 
                 context.report({
                     node: node,
-                    messageId: "no-prepend",
+                    messageId: "compat-dom",
                     data: {
                         method: name,
                         browser: supportedAndBrokenBrowser[1],
