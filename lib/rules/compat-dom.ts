@@ -2,8 +2,8 @@ import { ESLintUtils } from '@typescript-eslint/experimental-utils';
 import CompatData from 'mdn-browser-compat-data';
 import { SupportBlock } from 'mdn-browser-compat-data/types';
 import browserslist from 'browserslist';
+import semver from 'semver';
 import ts from 'typescript';
-
 function collectBaseSymbols(t: ts.BaseType): ts.Symbol[] {
     const symbols: ts.Symbol[] = [];
     symbols.push(t.symbol);
@@ -29,17 +29,22 @@ function toMdnName(name: string): string {
         samsung: 'samsunginternet_android',
         op_mob: 'opera_android',
         ios_saf: 'safari_ios',
-        android: 'chrome_android',
+        android: 'webview_android',
     };
     return mapping[name] || name;
 }
 
+function toSemVer(version: string): string {
+    const count = version.match(/\./g)?.length || 0;
+    if (count === 0) return `${version}.0.0`;
+    if (count === 1) return `${version}.0`;
+    return version;
+}
+
 function isSupported(support: SupportBlock, targetBrowsersList: string[]): [Boolean, string?] {
-    //if (!support) return [false, undefined];
     for (const browserAndVersion of targetBrowsersList) {
         const browser = toMdnName(browserAndVersion.split(' ')[0]);
-        // extract 13.0 from 'ios_saf 13.0-13.1'
-        const version = Number(browserAndVersion.split(/[ -]/)[1]) || 0;
+        const version = browserAndVersion.split(' ')[1] || '0';
         const browserSupport = support[browser];
         if (!browserSupport) {
             // skip kaios, op_mini, baidu, and_qq, and_uc
@@ -49,8 +54,15 @@ function isSupported(support: SupportBlock, targetBrowsersList: string[]): [Bool
         const browsers = Array.isArray(browserSupport) ? browserSupport : [browserSupport];
         for (const b of browsers) {
             const added = b.version_added;
-            if (added === false) return [false, browserAndVersion];
-            if (Number(added) > version) return [false, browserAndVersion];
+            if (added === true) continue;
+            if (added === false || added === null) return [false, browserAndVersion];
+
+            const semAdded = semver.minVersion(added);
+            const semV = semver.minVersion(version);
+            if (semAdded && semV) {
+                // console.log(semAdded, semV, semver.gt(semAdded, semV));
+                if (semver.gt(semAdded, semV)) return [false, browserAndVersion];
+            }
         }
     }
     return [true, undefined];
