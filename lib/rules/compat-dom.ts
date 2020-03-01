@@ -34,13 +34,6 @@ function toMdnName(name: string): string {
     return mapping[name] || name;
 }
 
-function toSemVer(version: string): string {
-    const count = version.match(/\./g)?.length || 0;
-    if (count === 0) return `${version}.0.0`;
-    if (count === 1) return `${version}.0`;
-    return version;
-}
-
 function isSupported(support: SupportBlock, targetBrowsersList: string[]): [Boolean, string?] {
     for (const browserAndVersion of targetBrowsersList) {
         const browser = toMdnName(browserAndVersion.split(' ')[0]);
