@@ -24,6 +24,10 @@ ruleTester.run("compat-dom", rule, {
             code: `navigator.vibrate()`,
             options: [ { browserslist: ['android 4.4.3']} ],
         },
+        {
+            code: `document.createElement('div')`,
+            options: [ { browserslist: ['android >= 4.1']} ],
+        },
     ],
 
     invalid: [
