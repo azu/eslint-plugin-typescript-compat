@@ -234,9 +234,9 @@ export default ESLintUtils.RuleCreator((name) => "")({
                     console.log("className", className);
                     const normalizedClass = normalizeClassName(className);
                     console.log("normalizedClass", normalizedClass);
-                    const compats = CompatData.javascript.builtins[normalizedClass.name];
-                    if (!compats) continue;
-                    const compat = compats[propertyName];
+                    const compatData = CompatData.javascript.builtins[normalizedClass.name];
+                    if (!compatData) continue;
+                    const compat = compatData[propertyName];
                     console.log("compat", compat);
                     if (!compat) continue;
                     const support = compat?.__compat?.support;
@@ -330,12 +330,12 @@ export default ESLintUtils.RuleCreator((name) => "")({
                     }
                 }
 
-                console.log("IdentifierParentSet", ...IdentifierParentSet);
-                console.log("Errors length", errors.length);
+                // console.log("IdentifierParentSet", ...IdentifierParentSet);
+                // console.log("Errors length", errors.length);
                 errors
                     .filter((error) => {
                         const errorNodeName = getName(error.node);
-                        console.log("errorNodeName", errorNodeName);
+                        // console.log("errorNodeName", errorNodeName);
                         return !IdentifierParentSet.has(error.data.objectName);
                     })
                     .forEach((error) => {

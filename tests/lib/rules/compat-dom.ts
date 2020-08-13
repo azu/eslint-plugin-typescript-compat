@@ -1,5 +1,5 @@
 import { RuleTester } from "eslint";
-import rule from "../../../lib/rules/compat-dom";
+import rule from "../../../src/rules/compat-dom";
 
 var ruleTester = new RuleTester({
     parserOptions: {
