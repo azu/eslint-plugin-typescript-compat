@@ -7,7 +7,7 @@
     "eslintplugin",
     "eslint-plugin"
   ],
-  "author": "sketch",
+  "author": "azu <azuciao@gmail.com>",
   "main": "./dist/src/index.js",
   "scripts": {
     "build": "tsc",
