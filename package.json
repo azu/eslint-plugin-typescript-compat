@@ -9,6 +9,9 @@
   ],
   "author": "azu <azuciao@gmail.com>",
   "main": "./dist/src/index.js",
+  "files": [
+    "dist/src"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "mocha \"tests/**/*.ts\"",
