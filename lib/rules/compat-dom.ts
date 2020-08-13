@@ -6,16 +6,13 @@ import semver from "semver";
 import ts from "typescript";
 import EStree from "@typescript-eslint/typescript-estree";
 
-function collectBaseClassNames(t: ts.Type): string[] {
+function collectBaseClassNames(object: ts.Type): string[] {
     const names: string[] = [];
-    if (t.symbol) {
-        names.push(t.symbol.getEscapedName().toString());
+    const symbol = object.getSymbol();
+    if (symbol) {
+        names.push(symbol.getEscapedName().toString());
     }
-    const baseTypes = t.getBaseTypes();
-    if (!baseTypes) {
-        console.log("xxxxxxxxxxxxxxxxx", t);
-    }
-
+    const baseTypes = object.getBaseTypes();
     //     const keys = [
     //         "getFlags",
     //         "getSymbol",
@@ -42,10 +39,10 @@ function collectBaseClassNames(t: ts.Type): string[] {
     //     ]
     //     keys.forEach(key => {
     //         // @ts-ignore
-    //         if (typeof t[key] === "function") {
+    //         if (typeof object[key] === "function") {
     //             try {
     //                 // @ts-ignore
-    //                 console.log(`t.${key}`, t[key]());
+    //                 console.log(`object.${key}`, object[key]());
     //             } catch {
     //             }
     //         }
@@ -120,6 +117,24 @@ function getNonSupportedBrowsers(support: SupportBlock, targetBrowsersList: stri
     return nonSupportResults;
 }
 
+const createPolyfillSets = (polyfills: string[]) => {
+    const set = new Set<string>();
+    polyfills.forEach((polyfillPattern) => {
+        const parts = polyfillPattern.split(".");
+        set.add(polyfillPattern);
+        if (parts[0] && parts[1] === "prototype" && parts[2]) {
+            // FIXME: support Array.find as Array.prototype.find
+            set.add(`${parts[0]}.${parts[2]}`);
+            // A.prototype.b to AConstructor.b
+            set.add(`${parts[0]}Constructor.${parts[2]}`);
+            // ReadonlyArray
+            if (["Array", "Map", "Set"].includes(parts[0])) {
+                set.add(`Readonly${parts[0]}.${parts[2]}`);
+            }
+        }
+    });
+    return set;
+};
 export default ESLintUtils.RuleCreator((name) => "")({
     name: "compat-dom",
     meta: {
@@ -147,6 +162,14 @@ export default ESLintUtils.RuleCreator((name) => "")({
                             },
                             { type: "string" }
                         ]
+                    },
+                    polyfills: {
+                        type: "array",
+                        items: [
+                            {
+                                type: "string"
+                            }
+                        ]
                     }
                 }
             }
@@ -155,12 +178,14 @@ export default ESLintUtils.RuleCreator((name) => "")({
     },
     defaultOptions: [
         {
-            browserslist: "defaults"
+            browserslist: "defaults",
+            polyfills: []
         }
     ],
     create(context, [options]) {
         const browserslistConfig = options.browserslist || "defaults";
         const targetBrowsersList = browserslist(browserslistConfig, { path: context.getFilename() });
+        const ignorePolyfillSet = createPolyfillSets(options.polyfills);
         const IdentifierParentSet = new Set();
         const errors: { node: EStree.TSESTree.MemberExpression; messageId: "compat-dom"; data: any }[] = [];
         return {
@@ -173,17 +198,19 @@ export default ESLintUtils.RuleCreator((name) => "")({
                 const tsProperty = context.parserServices?.esTreeNodeToTSNodeMap?.get(node.property);
                 if (!tsProperty) return;
                 const propertyType = checker.getTypeAtLocation(tsProperty);
-                const propertySymbol = propertyType.symbol;
+                const propertySymbol = checker.getSymbolAtLocation(tsProperty);
                 // if (!isLibDomSymbol(propertySymbol)) return;
                 // intrinsicName:any has not symbol
-                console.log("propertyType.getBaseTypes()", objectType);
-                console.log("symbolsymbol", objectType);
                 if (!propertySymbol) {
                     return;
                 }
                 const propertyName = propertySymbol.getName();
-                console.log("propertySymbol.name", propertyName);
-                for (const className of collectBaseClassNames(objectType)) {
+                // Support ReadOnlyArray
+                // ReadOnlyArray is not defined in object
+                const propertyParentTypeName = (propertySymbol as any)?.parent?.escapedName.toString();
+                for (const className of collectBaseClassNames(objectType).concat(
+                    propertyParentTypeName ? [propertyParentTypeName] : []
+                )) {
                     const normalizeClassName = (className: string) => {
                         // e.g. ArrayConstructor
                         if (className.endsWith("Constructor")) {
@@ -204,6 +231,7 @@ export default ESLintUtils.RuleCreator((name) => "")({
                             rawName: className
                         };
                     };
+                    console.log("className", className);
                     const normalizedClass = normalizeClassName(className);
                     console.log("normalizedClass", normalizedClass);
                     const compats = CompatData.javascript.builtins[normalizedClass.name];
@@ -216,6 +244,10 @@ export default ESLintUtils.RuleCreator((name) => "")({
                     // Support testing
                     const nonSupportedBrowsers = getNonSupportedBrowsers(support, targetBrowsersList);
                     if (nonSupportedBrowsers.length === 0) continue;
+
+                    if (ignorePolyfillSet.has(`${normalizedClass.rawName}.${propertyName}`)) {
+                        return; // skip it is polyfill-ed
+                    }
 
                     errors.push({
                         node: node,

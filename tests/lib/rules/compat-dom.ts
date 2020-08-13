@@ -44,9 +44,14 @@ ruleTester.run("compat-dom", rule, {
         },
         // Allow polyfill-ed
         {
+            code: `[].find(() => {});`,
+            options: [{ polyfills: ["Array.prototype.find"], browserslist: ["ie 11"] }]
+        },
+        // Allow to override by polyfill
+        {
             code: `Array.prototype.find = (cb) => { return cb() };
 [].find(() => {});`,
-            options: [{ browserslist: ["ie 11"] }]
+            options: [{ polyfills: ["Array.prototype.find"], browserslist: ["ie 11"] }]
         },
         // Allow declaration by user
         {
@@ -89,7 +94,7 @@ array.find(() => {})`,
             errors: [
                 {
                     message:
-                        "Array.find is not supported in ie 11. https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/find",
+                        "ReadonlyArray.find is not supported in ie 11. https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/find",
                     type: "MemberExpression"
                 }
             ]
