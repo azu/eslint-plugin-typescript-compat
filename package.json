@@ -8,11 +8,12 @@
     "eslint-plugin"
   ],
   "author": "sketch",
-  "main": "./dist/lib/index.js",
+  "main": "./dist/src/index.js",
   "scripts": {
     "build": "tsc",
-    "test": "mocha -r ts-node/register tests/**/*.ts",
+    "test": "mocha \"tests/**/*.ts\"",
     "prepare": "npm run build",
+    "prepublish": "npm run --if-present build",
     "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\""
   },
   "dependencies": {
