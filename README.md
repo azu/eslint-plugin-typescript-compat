@@ -1,4 +1,4 @@
-# eslint-plugin-typescript-compat
+# eslint-plugin-typescript-compat [![Actions Status: test](https://github.com/azu/eslint-plugin-typescript-compat/workflows/test/badge.svg)](https://github.com/azu/eslint-plugin-typescript-compat/actions?query=workflow%3A"test")
 
 ESLint rule for browser compatibility of your TypeScript code.
 
