@@ -1,8 +1,10 @@
-/**
- * @fileoverview compat-dom
- * @author hitode909
- */
+import { recommended } from "./config/recommened";
+import compat from "./rules/compat";
 
-var requireIndex = require("requireindex");
-
-module.exports.rules = requireIndex(__dirname + "/rules");
+export const configs = {
+    recommended
+};
+export const config = configs;
+export const rules = {
+    compat
+};
