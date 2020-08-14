@@ -85,6 +85,9 @@ function toMdnName(name: string): string {
 
 function getNonSupportedBrowsers(support: SupportBlock, targetBrowsersList: string[]): { browserName: string }[] {
     const nonSupportResults: { browserName: string }[] = [];
+    const normalizeSyntax = (v: string): string => {
+        return v.replace("≤", "<=").replace("≧", ">=");
+    };
     for (const browserAndVersion of targetBrowsersList) {
         const browser = toMdnName(browserAndVersion.split(" ")[0]);
         // 4.3.3-4.3.4 to 4.3.3
@@ -110,14 +113,18 @@ function getNonSupportedBrowsers(support: SupportBlock, targetBrowsersList: stri
                 });
                 continue;
             }
-            const semAdded = semver.minVersion(added);
-            const semV = semver.minVersion(version);
-            if (semAdded && semV) {
-                if (semver.gt(semAdded, semV)) {
-                    nonSupportResults.push({
-                        browserName: browserAndVersion
-                    });
+            try {
+                const semAdded = semver.minVersion(normalizeSyntax(added));
+                const semV = semver.minVersion(normalizeSyntax(version));
+                if (semAdded && semV) {
+                    if (semver.gt(semAdded, semV)) {
+                        nonSupportResults.push({
+                            browserName: browserAndVersion
+                        });
+                    }
                 }
+            } catch (error) {
+                log("Parse Error", added, version);
             }
         }
     }
@@ -197,9 +204,12 @@ export default ESLintUtils.RuleCreator((name) => "")<Options, keyof typeof messa
         }
     ],
     create(context, [options]) {
-        const browserslistConfig = options.browserslist || "defaults";
+        const browserslistConfig =
+            (context.settings.browserslist as undefined | string | string[]) ?? options.browserslist ?? "defaults";
         const targetBrowsersList = browserslist(browserslistConfig, { path: context.getFilename() });
-        const ignorePolyfillSet = createPolyfillSets(options.polyfills);
+        const ignorePolyfillSet = createPolyfillSets(
+            (context.settings.pollyfills as undefined | string[]) ?? options.polyfills ?? options
+        );
         const IdentifierParentSet = new Set();
         const errors: { node: EStree.TSESTree.MemberExpression; messageId: "compat-dom"; data: any }[] = [];
         return {
@@ -344,12 +354,10 @@ export default ESLintUtils.RuleCreator((name) => "")<Options, keyof typeof messa
                     }
                 }
 
-                // log("IdentifierParentSet", ...IdentifierParentSet);
-                // log("Errors length", errors.length);
+                log("IdentifierParentSet", ...IdentifierParentSet);
+                log("Errors length", errors.length, "File", context.getFilename());
                 errors
                     .filter((error) => {
-                        const errorNodeName = getName(error.node);
-                        // log("errorNodeName", errorNodeName);
                         return !IdentifierParentSet.has(error.data.objectName);
                     })
                     .forEach((error) => {

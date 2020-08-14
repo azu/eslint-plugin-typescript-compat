@@ -17,6 +17,11 @@ const ruleTester = new RuleTester({
 // @ts-expect-error
 ruleTester.run("compat-dom", rule, {
     valid: [
+        // TODO: it will be failed
+        {
+            code: `new Promise(() => {})`,
+            options: [{ browserslist: ["ie 11"] }]
+        },
         {
             code: `[].indexOf(0)`,
             options: [{ browserslist: ["ie 11"] }]

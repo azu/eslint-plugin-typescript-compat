@@ -8,32 +8,71 @@ ESLint rule for browser compatibility of your TypeScript code.
 - Inspired by [eslint\-plugin\-compat](https://www.npmjs.com/package/eslint-plugin-compat) and [eslint-plugin-typescript-compat-dom](https://github.com/hitode909/eslint-plugin-typescript-compat-dom)
   - `eslint-plugin-compat` aims to JavaScript, while this plugin aims to TypeScript.
 
+## Supports
+
+- [ ] JavaScript Built-in Object
+    - [x] Prototype method like `Array.prototype.find`
+    - [ ] Object like `Promise`
+- [ ] DOM API
+
 ## Installation
 
+### 1. Install
+
+You need to install TypeScript and [@typescript-eslint/parser](https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/parser)
+
 ```
-$ npm install eslint eslint typescript @typescript-eslint/parser --save-dev
+$ npm install eslint-plugin-typescript-compat typescript @typescript-eslint/parser --save-dev
 ```
 
-## Usage
+### 2. Update ESLint Config
 
-Specify the parser in you .eslintrc.
+`.eslintrc.json`:
 
-```json
+```diff
+   {
++    "extends": ["plugin:typescript-compat/recommended"],
++    "env": {
++      "browser": true
++    },
+     // ...
+   }
+```
+
+### 3. Add a target for browserlist
+
+Browser targets are configured using [browserslist](https://github.com/browserslist/browserslist).
+
+You can configure browser targets in your `package.json`.
+
+Example) Your project need to support IE 11.
+
+```diff
 {
-  "parser": "@typescript-eslint/parser"
+     // ...
++    "browserslist": [
++      "ie 11"
++    ]
 }
 ```
 
-Set plugins and rules.
+For more details, see [browserslist](https://github.com/browserslist/browserslist).
 
-```json
+## Options
+
+### Adding Polyfills
+
+Add polyfills to the `settings` section of your eslint config.
+
+
+```jso5
 {
-  "plugins": ["typescript-compat-dom"],
-
-  "rules": {
-    "typescript-compat-dom/compat-dom": ["error", {
-        "browserslist": ["ie 11"]
-    }]
+  // ...
+  "settings": {
+    "polyfills": [
+      // Example of instance method, must add `.prototype.`
+      "Array.prototype.find"
+    ]
   }
 }
 ```
