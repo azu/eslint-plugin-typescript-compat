@@ -1,7 +1,8 @@
 import { RuleTester } from "eslint";
 import rule from "../../../src/rules/compat-dom";
 
-var ruleTester = new RuleTester({
+process.env.NODE_ENV = "test";
+const ruleTester = new RuleTester({
     parserOptions: {
         preserveNodeMaps: true,
         tsconfigRootDir: "./tests/fixture-project/",
@@ -9,9 +10,6 @@ var ruleTester = new RuleTester({
         createDefaultProgram: true,
         ecmaVersion: 2017,
         sourceType: "module"
-    },
-    ecmaFeatures: {
-        modules: true
     },
     parser: require.resolve("@typescript-eslint/parser")
 });

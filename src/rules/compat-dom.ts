@@ -6,6 +6,13 @@ import semver from "semver";
 import ts from "typescript";
 import EStree from "@typescript-eslint/typescript-estree";
 
+const log = (...args: any[]) => {
+    if (process.env.NODE_ENV !== "test") {
+        return;
+    }
+    console.log("[eslint-plugin-typescript-compat]", ...args);
+};
+
 function collectBaseClassNames(object: ts.Type): string[] {
     const names: string[] = [];
     const symbol = object.getSymbol();
@@ -42,7 +49,7 @@ function collectBaseClassNames(object: ts.Type): string[] {
     //         if (typeof object[key] === "function") {
     //             try {
     //                 // @ts-ignore
-    //                 console.log(`object.${key}`, object[key]());
+    //                 log(`object.${key}`, object[key]());
     //             } catch {
     //             }
     //         }
@@ -135,7 +142,16 @@ const createPolyfillSets = (polyfills: string[]) => {
     });
     return set;
 };
-export default ESLintUtils.RuleCreator((name) => "")({
+export type Options = [
+    {
+        browserslist: string | string[];
+        polyfills: string[];
+    }
+];
+const messages = {
+    "compat-dom": "{{ name }} is not supported in {{ browser }}. {{ url }}"
+};
+export default ESLintUtils.RuleCreator((name) => "")<Options, keyof typeof messages>({
     name: "compat-dom",
     meta: {
         docs: {
@@ -144,9 +160,7 @@ export default ESLintUtils.RuleCreator((name) => "")({
             recommended: "error",
             requiresTypeChecking: true
         },
-        messages: {
-            "compat-dom": "{{ name }} is not supported in {{ browser }}. {{ url }}"
-        },
+        messages: messages,
         schema: [
             {
                 type: "object",
@@ -231,13 +245,13 @@ export default ESLintUtils.RuleCreator((name) => "")({
                             rawName: className
                         };
                     };
-                    console.log("className", className);
+                    log("className", className);
                     const normalizedClass = normalizeClassName(className);
-                    console.log("normalizedClass", normalizedClass);
+                    log("normalizedClass", normalizedClass);
                     const compatData = CompatData.javascript.builtins[normalizedClass.name];
                     if (!compatData) continue;
                     const compat = compatData[propertyName];
-                    console.log("compat", compat);
+                    log("compat", compat);
                     if (!compat) continue;
                     const support = compat?.__compat?.support;
                     if (!support) continue;
@@ -288,7 +302,7 @@ export default ESLintUtils.RuleCreator((name) => "")({
                 // // if (!isLibDomSymbol(objectSymbol)) return;
                 // const name = objectSymbol.getEscapedName().toString();
                 // const compat = CompatData.api[name];
-                // console.log("compat", compat);
+                // log("compat", compat);
                 // if (!compat) return;
                 // const support = compat?.__compat?.support;
                 // if (!support) return;
@@ -330,12 +344,12 @@ export default ESLintUtils.RuleCreator((name) => "")({
                     }
                 }
 
-                // console.log("IdentifierParentSet", ...IdentifierParentSet);
-                // console.log("Errors length", errors.length);
+                // log("IdentifierParentSet", ...IdentifierParentSet);
+                // log("Errors length", errors.length);
                 errors
                     .filter((error) => {
                         const errorNodeName = getName(error.node);
-                        // console.log("errorNodeName", errorNodeName);
+                        // log("errorNodeName", errorNodeName);
                         return !IdentifierParentSet.has(error.data.objectName);
                     })
                     .forEach((error) => {
