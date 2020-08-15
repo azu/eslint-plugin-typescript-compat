@@ -4,9 +4,10 @@ ESLint rule for browser compatibility of your TypeScript code.
 
 - Lints the compatibilities between ECMAScript API.
     - [ ] DOM API is not support yet
-- Refers [mdn\-browser\-compat\-data](https://www.npmjs.com/package/mdn-browser-compat-data), TypeScript Compiler API, and browserslist.
-- Inspired by [eslint\-plugin\-compat](https://www.npmjs.com/package/eslint-plugin-compat) and [eslint-plugin-typescript-compat-dom](https://github.com/hitode909/eslint-plugin-typescript-compat-dom)
-  - `eslint-plugin-compat` aims to JavaScript, while this plugin aims to TypeScript.
+- Refers [mdn-browser-compat-data](https://www.npmjs.com/package/mdn-browser-compat-data), TypeScript Compiler API, and browserslist.
+- Inspired by [eslint-plugin-compat](https://www.npmjs.com/package/eslint-plugin-compat) and [eslint-plugin-typescript-compat-dom](https://github.com/hitode909/eslint-plugin-typescript-compat-dom)
+    - [eslint-plugin-compat](https://www.npmjs.com/package/eslint-plugin-compat) aims to JavaScript, while this plugin aims to TypeScript.
+    - [eslint-plugin-es](https://github.com/mysticatea/eslint-plugin-es) disallow to use ECMAScript syntax, but it does not support method like `Array.prototype.includes`
 
 ## Supports
 
