@@ -230,7 +230,8 @@ export default ESLintUtils.RuleCreator((name) => "")<Options, keyof typeof messa
                 }
                 const propertyName = propertySymbol.getName();
                 // Support ReadOnlyArray
-                // ReadOnlyArray is not defined in object
+                // FIXME: Can not found ReadOnlyArray in `objectType`.
+                // But, `propertySymbol.parent` is ReadOnlyArray type
                 const propertyParentTypeName = (propertySymbol as any)?.parent?.escapedName.toString();
                 for (const className of collectBaseClassNames(objectType).concat(
                     propertyParentTypeName ? [propertyParentTypeName] : []
