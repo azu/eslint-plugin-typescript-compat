@@ -46,7 +46,7 @@ Browser targets are configured using [browserslist](https://github.com/browsersl
 
 You can configure browser targets in your `package.json`.
 
-Example) Your project need to support IE 11.
+For example, Your project need to support IE 11.
 
 ```diff
 {
@@ -80,7 +80,7 @@ Add polyfills to the `settings` section of your eslint config.
 
 ## LICENCE
 
-MIT
+MIT © azu
 
 This ESLint plugin is based on these. 
 
