@@ -36,9 +36,15 @@ $ npm install eslint-plugin-typescript-compat typescript @typescript-eslint/pars
 +    "env": {
 +      "browser": true
 +    },
++    "parserOptions": {
++      "project": "./tsconfig.json"
++    },
      // ...
    }
 ```
+
+Require [parserOptions.project](https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/parser#parseroptionsproject) setting for using type information.
+
 
 ### 3. Add a target for browserlist
 
