@@ -13,6 +13,7 @@ ESLint rule for browser compatibility of your TypeScript code.
 
 - [ ] JavaScript Built-in Object
     - [x] Prototype method like `Array.prototype.find`
+    - [x] Static method like `Array.from`
     - [ ] Object like `Promise`
 - [ ] DOM API
 
