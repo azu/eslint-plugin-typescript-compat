@@ -56,7 +56,7 @@ The default value of TypeScript's `lib` is `ES2015`(`ES6`). So, TypeScript check
 
 If you want to detect ES2016+ features like `Array.prototype.flag`, you need to set `"lib": ["ESNext"]`
 
-```json
+```json5
 {
     "compilerOptions": {
         // ...
