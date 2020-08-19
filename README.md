@@ -65,6 +65,28 @@ For example, Your project need to support IE 11.
 
 For more details, see [browserslist](https://github.com/browserslist/browserslist).
 
+## Example
+
+When your browserlist configuration is:
+
+```json5
+     "browserslist": [
+       "ie 11"
+    ]
+```
+
+Following code includes `Array.prototype.includes`
+
+```
+const items = [1,2,3];
+items.includes(2); 
+```
+
+This rule show following error.
+
+> Array.included is not supported in ie 11. https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/find"
+
+
 ## Options
 
 ### Adding Polyfills
