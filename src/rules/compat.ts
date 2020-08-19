@@ -217,25 +217,37 @@ export default ESLintUtils.RuleCreator((name) => "")<Options, keyof typeof messa
                 const checker = context.parserServices?.program?.getTypeChecker();
                 if (!checker) return;
                 const tsObject = context.parserServices?.esTreeNodeToTSNodeMap?.get(node.object);
-                if (!tsObject) return;
+                log("tsObject", tsObject);
+                if (!tsObject) {
+                    log("Not found tsObject");
+                    return;
+                }
                 const objectType = checker.getTypeAtLocation(tsObject);
                 const tsProperty = context.parserServices?.esTreeNodeToTSNodeMap?.get(node.property);
-                if (!tsProperty) return;
+                log("tsProperty", tsProperty);
+                if (!tsProperty) {
+                    log("Not found tsProperty");
+                    return;
+                }
                 const propertyType = checker.getTypeAtLocation(tsProperty);
                 const propertySymbol = checker.getSymbolAtLocation(tsProperty);
                 // if (!isLibDomSymbol(propertySymbol)) return;
                 // intrinsicName:any has not symbol
                 if (!propertySymbol) {
+                    log("Not found propertySymbol", propertyType);
                     return;
                 }
                 const propertyName = propertySymbol.getName();
                 // Support ReadOnlyArray
                 // FIXME: Can not found ReadOnlyArray in `objectType`.
                 // But, `propertySymbol.parent` is ReadOnlyArray type
+                log("objectType", objectType);
                 const propertyParentTypeName = (propertySymbol as any)?.parent?.escapedName.toString();
-                for (const className of collectBaseClassNames(objectType).concat(
-                    propertyParentTypeName ? [propertyParentTypeName] : []
-                )) {
+                const baseClassNames = new Set(
+                    collectBaseClassNames(objectType).concat(propertyParentTypeName ? [propertyParentTypeName] : [])
+                );
+                log("baseClassNames", baseClassNames);
+                for (const className of baseClassNames) {
                     const normalizeClassName = (className: string) => {
                         // e.g. ArrayConstructor
                         if (className.endsWith("Constructor")) {

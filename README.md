@@ -45,6 +45,29 @@ $ npm install eslint-plugin-typescript-compat typescript @typescript-eslint/pars
 
 Require [parserOptions.project](https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/parser#parseroptionsproject) setting for using type information.
 
+Also, your `tsconfig.json` should define `lib` that you want to detect.
+The default value of TypeScript's `lib` is `ES2015`(`ES6`). So, TypeScript checker does not recognize ES2016+ features by default.
+ 
+> Note: If --lib is not specified a default list of libraries are injected. The default libraries injected are:
+> ► For --target ES5: DOM,ES5,ScriptHost
+> ► For --target ES6: DOM,ES6,DOM.Iterable,ScriptHost
+
+:memo: Internally note. TypeScript Checker return `intrinsicName: 'error',` or `intrinsicName: 'unknown'` for non-recognized type.
+
+If you want to detect ES2016+ features like `Array.prototype.flag`, you need to set `"lib": ["ESNext"]`
+
+```json
+{
+    "compilerOptions": {
+        // ...
+        "lib": [
+            "ESNext",
+            "DOM"
+        ]
+    }
+}
+
+```
 
 ### 3. Add a target for browserlist
 

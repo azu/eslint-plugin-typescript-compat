@@ -66,13 +66,14 @@ array.find(() => {});`,
     ],
     invalid: [
         {
-            // Array#find is not defined in IE11
-            code: `[].find(() => {})`,
+            // Array#flat is not defined in IE11
+            code: `const arr1 = [1, 2, [3, 4]];
+arr1.flat();`,
             options: [{ browserslist: ["ie 11"] }],
             errors: [
                 {
                     message:
-                        "Array.find is not supported in ie 11. https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/find",
+                        "Array.flat is not supported in ie 11. https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/flat",
                     type: "MemberExpression"
                 }
             ]
