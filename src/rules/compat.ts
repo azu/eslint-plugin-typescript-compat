@@ -7,7 +7,7 @@ import ts from "typescript";
 import EStree from "@typescript-eslint/typescript-estree";
 
 const log = (...args: any[]) => {
-    if (process.env.NODE_ENV !== "test") {
+    if (process.env.NODE_ENV !== "eslint-plugin-typescript-compat") {
         return;
     }
     console.log("[eslint-plugin-typescript-compat]", ...args);
