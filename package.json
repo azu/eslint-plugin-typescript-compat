@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-typescript-compat",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "ESLint rule for browser compatibility of your TypeScript code",
   "keywords": [
     "eslint",
