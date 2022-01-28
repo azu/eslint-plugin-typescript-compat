@@ -163,7 +163,6 @@ export default ESLintUtils.RuleCreator((name) => "")<Options, keyof typeof messa
     meta: {
         docs: {
             description: `Disable prepend()`,
-            category: "Possible Errors",
             recommended: "error",
             requiresTypeChecking: true
         },
