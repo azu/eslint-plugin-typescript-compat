@@ -15,9 +15,9 @@
   "scripts": {
     "build": "tsc",
     "test": "mocha \"tests/**/*.ts\"",
-    "prepare": "npm run build",
+    "prepare": "git config --local core.hooksPath .githooks",
     "prepublish": "npm run --if-present build",
-    "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\""
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\""
   },
   "dependencies": {
     "@typescript-eslint/experimental-utils": "^3.9.0",
@@ -38,7 +38,6 @@
     "@typescript-eslint/parser": "^3.9.0",
     "chai": "^4.2.0",
     "eslint": "^7.6.0",
-    "husky": "^7.0.4",
     "lint-staged": "^12.3.2",
     "mocha": "^9.2.0",
     "prettier": "^2.5.1",
@@ -51,11 +50,6 @@
     "printWidth": 120,
     "tabWidth": 4,
     "trailingComma": "none"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,css}": [
