@@ -1,6 +1,6 @@
 import { ESLintUtils } from "@typescript-eslint/experimental-utils";
-import CompatData from "mdn-browser-compat-data";
-import { SupportBlock } from "mdn-browser-compat-data/types";
+import CompatData from "@mdn/browser-compat-data";
+import { SupportBlock } from "@mdn/browser-compat-data/types";
 import browserslist from "browserslist";
 import semver from "semver";
 import ts from "typescript";
