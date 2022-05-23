@@ -207,7 +207,7 @@ export default ESLintUtils.RuleCreator((name) => "")<Options, keyof typeof messa
             (context.settings.browserslist as undefined | string | string[]) ?? options.browserslist ?? "defaults";
         const targetBrowsersList = browserslist(browserslistConfig, { path: context.getFilename() });
         const ignorePolyfillSet = createPolyfillSets(
-            (context.settings.pollyfills as undefined | string[]) ?? options.polyfills ?? options
+            (context.settings.polyfills as undefined | string[]) ?? options.polyfills ?? options
         );
         const IdentifierParentSet = new Set();
         const errors: { node: EStree.TSESTree.MemberExpression; messageId: "compat-dom"; data: any }[] = [];
