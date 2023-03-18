@@ -238,7 +238,7 @@ export default ESLintUtils.RuleCreator((name) => "")<Options, keyof typeof messa
                 // if (!isLibDomSymbol(propertySymbol)) return;
                 // intrinsicName:any has not symbol
                 if (!propertySymbol) {
-                    log("Not found propertySymbol", propertyType, propertyType.symbol);
+                    log("Not found propertySymbol", propertyType);
                     return;
                 }
                 const propertyName = propertySymbol.getName();
