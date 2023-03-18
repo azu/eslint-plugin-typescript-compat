@@ -7,7 +7,7 @@ ESLint rule for browser compatibility of your TypeScript code.
 - Refers [mdn-browser-compat-data](https://www.npmjs.com/package/mdn-browser-compat-data), TypeScript Compiler API, and browserslist.
 - Inspired by [eslint-plugin-compat](https://www.npmjs.com/package/eslint-plugin-compat) and [eslint-plugin-typescript-compat-dom](https://github.com/hitode909/eslint-plugin-typescript-compat-dom)
     - [eslint-plugin-compat](https://www.npmjs.com/package/eslint-plugin-compat) aims to JavaScript, while this plugin aims to TypeScript.
-    - [eslint-plugin-es](https://github.com/mysticatea/eslint-plugin-es) disallow to use ECMAScript syntax, but it does not support method like `Array.prototype.includes`
+    - [eslint-plugin-es](https://github.com/mysticatea/eslint-plugin-es) and [eslint-plugin-es-x](https://github.com/eslint-community/eslint-plugin-es-x) disallow to use ECMAScript syntax, but it does not support method like `Array.prototype.includes`
 
 ## Supports
 
@@ -44,7 +44,7 @@ $ npm install eslint-plugin-typescript-compat typescript @typescript-eslint/pars
    }
 ```
 
-Require [parserOptions.project](https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/parser#parseroptionsproject) setting for using type information.
+Require [parserOptions.project](https://typescript-eslint.io/architecture/parser/) setting for using type information.
 
 Also, your `tsconfig.json` should define `lib` that you want to detect.
 The default value of TypeScript's `lib` is `ES2015`(`ES6`). So, TypeScript checker does not recognize ES2016+ features by default.
