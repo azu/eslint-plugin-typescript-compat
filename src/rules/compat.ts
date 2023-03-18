@@ -1,6 +1,6 @@
 import { ESLintUtils } from "@typescript-eslint/experimental-utils";
 import CompatData from "@mdn/browser-compat-data";
-import { SupportBlock } from "@mdn/browser-compat-data/types";
+import { BrowserName, SupportBlock } from "@mdn/browser-compat-data/types";
 import browserslist from "browserslist";
 import semver from "semver";
 import ts from "typescript";
@@ -71,7 +71,11 @@ function isLibDomSymbol(symbol: ts.Symbol): Boolean {
     return decs.every((dec) => dec.getSourceFile().fileName.match(/lib\.dom\.d\.ts/));
 }
 
-function toMdnName(name: string): string {
+function isBrowserName(name: string): name is BrowserName {
+    return CompatData.browsers.hasOwnProperty(name);
+}
+
+function toMdnName(name: string): BrowserName {
     const mapping: { [key: string]: string } = {
         and_chr: "chrome_android",
         and_ff: "firefox_android",
@@ -79,8 +83,12 @@ function toMdnName(name: string): string {
         op_mob: "opera_android",
         ios_saf: "safari_ios",
         android: "webview_android"
-    };
-    return mapping[name] || name;
+    } as const;
+    const browserName = mapping[name] || name;
+    if (!isBrowserName(browserName)) {
+        throw new Error(`Unknown browser name: ${name}`);
+    }
+    return browserName;
 }
 
 function getNonSupportedBrowsers(support: SupportBlock, targetBrowsersList: string[]): { browserName: string }[] {
