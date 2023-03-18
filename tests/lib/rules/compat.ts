@@ -194,6 +194,18 @@ function fn(items: string[]) {
                     type: "MemberExpression"
                 }
             ]
+        },
+        {
+            code: `const arr1 = [1, 2];
+arr1.flat()`,
+            options: [{ browserslist: ["Firefox 50, ie 11"] }],
+            errors: [
+                {
+                    message:
+                        "Array.flat is not supported in firefox 50, ie 11. https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array/flat",
+                    type: "MemberExpression"
+                }
+            ]
         }
     ]
 });

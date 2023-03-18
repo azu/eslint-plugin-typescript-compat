@@ -1,13 +1,13 @@
 import { ESLintUtils } from "@typescript-eslint/experimental-utils";
 import CompatData from "@mdn/browser-compat-data";
-import { SupportBlock } from "@mdn/browser-compat-data/types";
+import { BrowserName, SupportBlock } from "@mdn/browser-compat-data/types";
 import browserslist from "browserslist";
 import semver from "semver";
 import ts from "typescript";
 import EStree from "@typescript-eslint/typescript-estree";
 
 const log = (...args: any[]) => {
-    if (process.env.NODE_ENV !== "eslint-plugin-typescript-compat") {
+    if (process.env.DEBUG !== "eslint-plugin-typescript-compat") {
         return;
     }
     console.log("[eslint-plugin-typescript-compat]", ...args);
@@ -71,6 +71,10 @@ function isLibDomSymbol(symbol: ts.Symbol): Boolean {
     return decs.every((dec) => dec.getSourceFile().fileName.match(/lib\.dom\.d\.ts/));
 }
 
+function isBrowserName(name: string): name is BrowserName {
+    return CompatData.browsers.hasOwnProperty(name);
+}
+
 function toMdnName(name: string): string {
     const mapping: { [key: string]: string } = {
         and_chr: "chrome_android",
@@ -79,8 +83,9 @@ function toMdnName(name: string): string {
         op_mob: "opera_android",
         ios_saf: "safari_ios",
         android: "webview_android"
-    };
-    return mapping[name] || name;
+    } as const;
+    const browserName = mapping[name] || name;
+    return browserName;
 }
 
 function getNonSupportedBrowsers(support: SupportBlock, targetBrowsersList: string[]): { browserName: string }[] {
@@ -92,8 +97,8 @@ function getNonSupportedBrowsers(support: SupportBlock, targetBrowsersList: stri
         const browser = toMdnName(browserAndVersion.split(" ")[0]);
         // 4.3.3-4.3.4 to 4.3.3
         const version = browserAndVersion.split(/[ -]/)[1] || "0";
-        const browserSupport = support[browser];
-        if (!browserSupport) {
+        const browserSupport = support[browser as BrowserName];
+        if (!isBrowserName(browser)) {
             // skip kaios, op_mini, baidu, and_qq, and_uc
             continue;
         }
@@ -233,7 +238,7 @@ export default ESLintUtils.RuleCreator((name) => "")<Options, keyof typeof messa
                 // if (!isLibDomSymbol(propertySymbol)) return;
                 // intrinsicName:any has not symbol
                 if (!propertySymbol) {
-                    log("Not found propertySymbol", propertyType);
+                    log("Not found propertySymbol", propertyType, propertyType.symbol);
                     return;
                 }
                 const propertyName = propertySymbol.getName();
