@@ -203,13 +203,12 @@ export default ESLintUtils.RuleCreator((name) => "")<Options, keyof typeof messa
     },
     defaultOptions: [
         {
-            browserslist: "defaults",
             polyfills: []
         }
     ],
     create(context, [options]) {
         const browserslistConfig =
-            (context.settings.browserslist as undefined | string | string[]) ?? options.browserslist ?? "defaults";
+            (context.settings.browserslist as undefined | string | string[]) ?? options.browserslist;
         const targetBrowsersList = browserslist(browserslistConfig, { path: context.getFilename() });
         const ignorePolyfillSet = createPolyfillSets(
             (context.settings.polyfills as undefined | string[]) ?? options.polyfills ?? options
