@@ -156,7 +156,7 @@ const createPolyfillSets = (polyfills: string[]) => {
 };
 export type Options = [
     {
-        browserslist: string | string[];
+        browserslist?: string | string[];
         polyfills: string[];
     }
 ];
