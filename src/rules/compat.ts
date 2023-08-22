@@ -285,29 +285,6 @@ export default ESLintUtils.RuleCreator((name) => "")<Options, keyof typeof messa
                 }
             },
             "Program:exit": () => {
-                function getName(node: EStree.TSESTree.Node): string {
-                    switch (node.type) {
-                        case "NewExpression": {
-                            // @ts-ignore
-                            return node.callee.name;
-                        }
-                        case "MemberExpression": {
-                            // @ts-ignore
-                            return node.object.name;
-                        }
-                        case "ExpressionStatement": {
-                            // @ts-ignore
-                            return node.expression.name;
-                        }
-                        case "CallExpression": {
-                            // @ts-ignore
-                            return node.callee.name;
-                        }
-                        default:
-                            throw new Error("not found");
-                    }
-                }
-
                 log("IdentifierParentSet", ...IdentifierParentSet);
                 log("Errors length", errors.length, "File", context.getFilename());
                 errors
