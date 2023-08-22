@@ -20,41 +20,6 @@ function collectBaseClassNames(object: ts.Type): string[] {
         names.push(symbol.getEscapedName().toString());
     }
     const baseTypes = object.getBaseTypes();
-    //     const keys = [
-    //         "getFlags",
-    //         "getSymbol",
-    //         "getProperties",
-    //         "getProperty",
-    //         "getApparentProperties",
-    //         "getCallSignatures",
-    //         "getConstructSignatures",
-    //         "getStringIndexType",
-    //         "getNumberIndexType",
-    //         "getBaseTypes",
-    //         "getNonNullableType",
-    //         "getConstraint",
-    //         "getDefault",
-    //         "isUnion",
-    //         "isIntersection",
-    //         "isUnionOrIntersection",
-    //         "isLiteral",
-    //         "isStringLiteral",
-    //         "isNumberLiteral",
-    //         "isTypeParameter",
-    //         "isClassOrInterface",
-    //         "isClass",
-    //     ]
-    //     keys.forEach(key => {
-    //         // @ts-ignore
-    //         if (typeof object[key] === "function") {
-    //             try {
-    //                 // @ts-ignore
-    //                 log(`object.${key}`, object[key]());
-    //             } catch {
-    //             }
-    //         }
-    //     })
-    // }
     if (baseTypes) {
         for (const base of baseTypes) {
             names.push(...collectBaseClassNames(base));
@@ -318,33 +283,6 @@ export default ESLintUtils.RuleCreator((name) => "")<Options, keyof typeof messa
                         IdentifierParentSet.add(node.name);
                     }
                 }
-                // const checker = context.parserServices?.program?.getTypeChecker();
-                // if (!checker) return;
-                // const tsObject = context.parserServices?.esTreeNodeToTSNodeMap?.get(node);
-                // if (!tsObject) return;
-                // const objectSymbol = checker.getSymbolAtLocation(tsObject);
-                // if (!objectSymbol) return;
-                //
-                // // if (!isLibDomSymbol(objectSymbol)) return;
-                // const name = objectSymbol.getEscapedName().toString();
-                // const compat = CompatData.api[name];
-                // log("compat", compat);
-                // if (!compat) return;
-                // const support = compat?.__compat?.support;
-                // if (!support) return;
-                // const nonSupportedBrowsers = getNonSupportedBrowsers(support, targetBrowsersList);
-                // if (nonSupportedBrowsers.length === 0) return;
-                //
-                // context.report({
-                //     node: node,
-                //     messageId: "compat-dom",
-                //     data: {
-                //         name: `${name}`,
-                //         browser: nonSupportedBrowsers.map(browser => browser.browserName).join(", "),
-                //         url: compat?.__compat?.mdn_url
-                //     }
-                // });
-                // return;
             },
             "Program:exit": () => {
                 function getName(node: EStree.TSESTree.Node): string {
